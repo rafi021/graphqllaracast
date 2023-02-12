@@ -21,7 +21,7 @@ type Mutation{
         body: String! @rules(apply: ["required", "min:3"])
     ): Post @create
 
-    CreatePostResolver(
+    createPostResolver(
         user_id: ID!
         title: String! @rules(apply: ["required", "min:3"])
         body: String! @rules(apply: ["required", "min:3"])
