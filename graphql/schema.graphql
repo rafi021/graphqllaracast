@@ -9,6 +9,8 @@ type Query {
 
     users(name: String @where(operator: "like")): [User!]! @paginate(defaultCount: 10)
     posts(title: String @where(operator: "like")): [Post!]! @paginate(defaultCount:20) @orderBy(column: "created_at", direction: DESC)
+    postsResolver: [Post!]! @field(resolver: "App\\GraphQL\\Queries\\PostsResolver")
+    postResolver(id: ID!): Post @field(resolver: "App\\GraphQL\\Queries\\PostResolver")
     post(id: ID! @eq): Post @find
 }
 
@@ -18,6 +20,12 @@ type Mutation{
         title: String! @rules(apply: ["required", "min:3"])
         body: String! @rules(apply: ["required", "min:3"])
     ): Post @create
+
+    CreatePostResolver(
+        user_id: ID!
+        title: String! @rules(apply: ["required", "min:3"])
+        body: String! @rules(apply: ["required", "min:3"])
+    ): Post @field (resolver: "App\\GraphQL\\Mutations\\CreatePostResolver")
 
     updatePost(
         id: ID!
