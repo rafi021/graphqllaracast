@@ -1,13 +1,15 @@
-<script setup>
-import { ref, onMounted } from 'vue';
-import { useQuery } from '@vue/apollo-composable';
-import { INDEX_POST } from '../../graphql/posts'
+<script setup lang="ts">
+import { useQuery, useMutation } from '@vue/apollo-composable';
+import { INDEX_POST, DELETE_POST } from '../../graphql/posts'
 
 /* load data */
-// const result = ref([]);
-// const loading = ref(null);
-const { result, loading } = useQuery(INDEX_POST);
+const { result, loading,refetch } = useQuery(INDEX_POST);
+const { mutate:deletePost } = useMutation(DELETE_POST);
 
+const removePost = (id:number) => {
+    deletePost({id: id})
+    refetch();
+}
 
 </script>
 <template>
@@ -50,7 +52,7 @@ const { result, loading } = useQuery(INDEX_POST);
                                             <td>{{ new Date(post.created_at).toLocaleString() }}</td>
                                             <td>
                                                 <router-link class="btn btn-info me-2" :to="{name: 'post-edit', params: {id: post.id}}">Edit</router-link>
-                                                <a class="btn btn-danger" @click="deletePost">Del</a>
+                                                <a class="btn btn-danger" @click="removePost(post.id)">Del</a>
                                             </td>
                                         </tr>
                                     </template>
