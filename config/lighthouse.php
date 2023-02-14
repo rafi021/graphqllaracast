@@ -34,6 +34,7 @@ return [
             // middleware, this delegates auth and permission checks to the field level.
             \Nuwave\Lighthouse\Support\Http\Middleware\AttemptAuthentication::class,
 
+
             // Logs every incoming GraphQL query.
             // \Nuwave\Lighthouse\Support\Http\Middleware\LogGraphQLQueries::class,
         ],
@@ -57,7 +58,8 @@ return [
     |
     */
 
-    'guard' => 'api',
+    // 'guard' => 'api',
+    'guard' => 'sanctum',
 
     /*
     |--------------------------------------------------------------------------

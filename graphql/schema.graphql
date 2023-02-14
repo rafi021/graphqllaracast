@@ -2,12 +2,12 @@
 scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
 
 type Query {
+    me: User @guard @auth
     user(
       id: ID @eq @rules(apply: ["prohibits:email", "required_without:email"])
       email: String @eq @rules(apply: ["prohibits:id", "required_without:id", "email"])
     ): User @find
-
-    users(name: String @where(operator: "like")): [User!]! @paginate(defaultCount: 10)
+    users(name: String @where(operator: "like")): [User!]! @paginate(defaultCount: 10) @guard
     posts(title: String @where(operator: "like")): [Post!]! @paginate(defaultCount:20) @orderBy(column: "created_at", direction: DESC)
     postsResolver: [Post!]! @field(resolver: "App\\GraphQL\\Queries\\PostsResolver")
     postResolver(id: ID!): Post @field(resolver: "App\\GraphQL\\Queries\\PostResolver")
@@ -37,6 +37,18 @@ type Mutation{
     deletePost(
         id: ID!
     ): Post @delete
+
+    loginTest(
+        email: String!
+        password: String!
+        device_name: String!
+    ): AccessTokenTest! @field (resolver: "App\\GraphQL\\Mutations\\LoginTestResolver")
+}
+
+#import sanctum.graphql
+
+type AccessTokenTest{
+    token: String!
 }
 
 type User {
