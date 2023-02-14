@@ -1,10 +1,14 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 import { useQuery, useMutation } from '@vue/apollo-composable';
 import { INDEX_POST, DELETE_POST } from '../../graphql/posts'
 
 /* load data */
-const { result, loading,refetch } = useQuery(INDEX_POST);
+const variables = ref({
+    page: 1
+})
 const { mutate:deletePost } = useMutation(DELETE_POST);
+const { result, loading, refetch } = useQuery(INDEX_POST, variables);
 
 const removePost = (id:number) => {
     deletePost({id: id})
@@ -59,6 +63,24 @@ const removePost = (id:number) => {
                                 </tbody>
                             </table>
                         </div>
+                    </div>
+                </div>
+                <!-- <div class="d-flex justify-content-end my-2">
+                <v-pagination v-model="result.posts.paginatorInfo.currentPage" :pages="result.posts.paginatorInfo.lastPage" :range-size="1" active-color="#6C3A97"
+                @update:modelValue=""/>
+                </div> -->
+                <div v-if="!loading" class="d-flex justify-content-between px-5 py-2">
+                    <div>Page: {{ result.posts.paginatorInfo.currentPage }} / {{ result.posts.paginatorInfo.lastPage }}</div>
+                    <div>
+                        Displaying {{ result.posts.paginatorInfo.count }} entries out of {{ result.posts.paginatorInfo.total }}
+                    </div>
+                    <div>
+                        <button class="btn" @click="variables.page--" :disabled="result.posts.paginatorInfo.currentPage == 1">
+                            &larr; Previous
+                        </button>
+                        <button class="btn" @click="variables.page++" :disabled="!result.posts.paginatorInfo.hasMorePages">
+                            Next &rarr;
+                        </button>
                     </div>
                 </div>
             </div>

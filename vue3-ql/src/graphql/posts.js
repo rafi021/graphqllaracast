@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export const INDEX_POST = gql`
-query posts{
-    posts{
+query posts($page: Int!){
+    posts(page: $page){
         data{
             id
             title
@@ -18,6 +18,7 @@ query posts{
             lastPage
             perPage,
             total
+            hasMorePages
         }
     }
 }
