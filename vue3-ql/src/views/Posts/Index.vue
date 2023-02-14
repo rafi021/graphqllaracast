@@ -1,14 +1,26 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useQuery, useMutation } from '@vue/apollo-composable';
+import { useQuery, useMutation, useResult } from '@vue/apollo-composable';
 import { INDEX_POST, DELETE_POST } from '../../graphql/posts'
 
 /* load data */
 const variables = ref({
     page: 1
 })
+
 const { mutate:deletePost } = useMutation(DELETE_POST);
-const { result, loading, refetch } = useQuery(INDEX_POST, variables);
+const { result, loading, refetch, onResult, onError } = useQuery(INDEX_POST, variables);
+
+onResult((queryResult ) =>{
+    console.log(queryResult.data)
+    console.log(queryResult.loading)
+    console.log(queryResult.networkStatus)
+})
+
+onError(error => {
+  console.log(error.graphQLErrors)
+  console.log(error.networkError)
+})
 
 const removePost = (id:number) => {
     deletePost({id: id})
@@ -65,7 +77,7 @@ const removePost = (id:number) => {
                         </div>
                     </div>
                 </div>
-                <div class="d-flex justify-content-end pb-1 px-5">
+                <div class="d-flex justify-content-end pb-1 px-5" v-if="result">
                 <v-pagination v-model="variables.page" :pages="result.posts.paginatorInfo.lastPage" :range-size="1" active-color="#6C3A97"
                 @update:modelValue="variables.page"/>
                 </div>
