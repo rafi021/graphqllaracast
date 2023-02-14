@@ -1,81 +1,48 @@
 <script setup>
-import { onMounted,ref } from 'vue';
-import HelloWorld from './components/HelloWorld.vue'
+import { ref, computed } from 'vue';
+import { useQuery } from '@vue/apollo-composable'
+import gql from 'graphql-tag'
 
-const posts = ref([]);
+const {result,loading} = useQuery(gql`
+    query{
+    posts{
+        data{
+        id
+        title
+        body
+        user{
+            id
+            name
+        }
+        }
+        paginatorInfo{
+        count
+        total
+        currentPage
+        lastPage
+        perPage
+        }
+    }
+    }
+`)
 
-
-onMounted(() =>{
-    fetch('http://127.0.0.1:8000/graphql', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            query: `
-                query{
-                    posts{
-                        data{
-                            id
-                            title
-                        }
-                    }
-                }
-            `
-        })
-    })
-    .then(res => res.json())
-    .then(result => {
-        console.log(result);
-        posts.value = result.data.posts.data;
-    })
-})
-
-const handleMutation = () => {
-    fetch('http://127.0.0.1:8000/graphql', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            query: `
-                mutation{
-                    createPostResolver(user_id:1, title: "testing", body: "testing"){
-                        id
-                        title
-                        body
-                    }
-                }
-            `
-        })
-    })
-    .then(res => res.json())
-    .then(result => {
-        console.log(result);
-        alert('Post was created!')
-    })
-}
-
+const posts = computed(() => result.value?.posts ?? [])
 </script>
 
 <template>
-    <ul>
-        <li v-for="post in posts" :key="post.id">{{ post.title }}</li>
+     <div v-if="loading">Loading...</div>
+    <div v-else-if="error">Error: {{ error.message }}</div>
+    <ul v-else-if="result && result.posts">
+        <li v-for="post in result.posts.data" :key="post.id">
+        <router-link to="/posts/">
+            {{ post.title }}
+        </router-link>
+
+        </li>
     </ul>
     <button @click="handleMutation">Add New Post</button>
 </template>
 
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
+
 </style>
