@@ -31,7 +31,7 @@ const removePost = (id:number) => {
                         <router-link class="btn btn-danger" :to="{name: 'post-create'}">Add New</router-link>
                     </div>
 
-                    <div class="col-md-12 my-3">
+                    <div class="col-md-12 my-2">
                         <div class="table-responsive">
                             <table class="table table-striped table caption-top">
                                 <caption class="text-danger fw-bold fs-5">List of posts</caption>
@@ -65,11 +65,11 @@ const removePost = (id:number) => {
                         </div>
                     </div>
                 </div>
-                <!-- <div class="d-flex justify-content-end my-2">
-                <v-pagination v-model="result.posts.paginatorInfo.currentPage" :pages="result.posts.paginatorInfo.lastPage" :range-size="1" active-color="#6C3A97"
-                @update:modelValue=""/>
-                </div> -->
-                <div v-if="!loading" class="d-flex justify-content-between px-5 py-2">
+                <div class="d-flex justify-content-end pb-1 px-5">
+                <v-pagination v-model="variables.page" :pages="result.posts.paginatorInfo.lastPage" :range-size="1" active-color="#6C3A97"
+                @update:modelValue="variables.page"/>
+                </div>
+                <!-- <div v-if="!loading" class="d-flex justify-content-between px-5 py-2">
                     <div>Page: {{ result.posts.paginatorInfo.currentPage }} / {{ result.posts.paginatorInfo.lastPage }}</div>
                     <div>
                         Displaying {{ result.posts.paginatorInfo.count }} entries out of {{ result.posts.paginatorInfo.total }}
@@ -82,7 +82,7 @@ const removePost = (id:number) => {
                             Next &rarr;
                         </button>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
 
@@ -90,6 +90,11 @@ const removePost = (id:number) => {
 </template>
 
 <style lang="scss" scoped>
+.Page {
+    .Page-active{
+        color: #fff !important;
+    }
+}
 
 </style>
 
