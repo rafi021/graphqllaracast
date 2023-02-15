@@ -1,7 +1,7 @@
 <script setup>
 import { useRouter, RouterLink, RouterView } from 'vue-router'
-import { useQuery } from '@vue/apollo-composable';
-import { USERNAME } from '../graphql/auth';
+import { useQuery, useMutation } from '@vue/apollo-composable';
+import { USERNAME, LOGOUT } from '../graphql/auth';
 import { ref } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 
@@ -9,9 +9,22 @@ const router = useRouter();
 const authStore = useAuthStore();
 const { result, onResult } = useQuery(USERNAME);
 
+const { mutate:Logout, loading, error, onDone } = useMutation(LOGOUT);
+
+
 onResult((queryResult) => {
     console.log(queryResult.data);
     authStore.setUserName(queryResult.data.me.name)
+})
+
+const logout = () =>{
+    Logout();
+}
+
+onDone((mutationResult) => {
+    console.log(mutationResult);
+    authStore.removeToken();
+    router.push({name: 'login'});
 })
 
 
@@ -39,7 +52,7 @@ onResult((queryResult) => {
             <li><a class="dropdown-item" href="#">Profile</a></li>
             <li><a class="dropdown-item" href="#">Change Password</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Logout</a></li>
+            <li><a class="dropdown-item" href="#" @click.prevent="logout">Logout</a></li>
             </ul>
         </li>
         </ul>

@@ -30,6 +30,7 @@ onDone((mutationResult) => {
     console.log(mutationResult);
     authStore.setToken(mutationResult.data.login.token);
     router.push({name: 'post-index'});
+    window.location.reload();
 })
 
 

@@ -23,3 +23,11 @@ mutation login (
     }
 }
 `
+export const LOGOUT = gql`
+mutation logout{
+    logout {
+        status
+        message
+    }
+}
+`
