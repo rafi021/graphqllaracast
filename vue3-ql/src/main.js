@@ -3,7 +3,7 @@ import { createApp, provide, h } from 'vue'
 import { createPinia } from 'pinia'
 import { apolloClient } from './apollo'
 import { DefaultApolloClient } from '@vue/apollo-composable'
-
+import VeeValidatePlugin from './includes/validation'
 import App from './App.vue'
 import router from './router'
 import "bootstrap/dist/css/bootstrap.min.css"
@@ -19,7 +19,8 @@ const app = createApp({
 })
 
 app.use(createPinia())
-app.use(router)
+app.use(router);
+app.use(VeeValidatePlugin);
 app.component("v-pagination", VPagination);
 
 app.mount('#app')

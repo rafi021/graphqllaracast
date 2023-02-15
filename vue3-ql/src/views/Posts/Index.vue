@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useQuery, useMutation, useResult } from '@vue/apollo-composable';
+import { useQuery, useMutation } from '@vue/apollo-composable';
 import { INDEX_POST, DELETE_POST } from '../../graphql/posts'
 
 /* load data */
