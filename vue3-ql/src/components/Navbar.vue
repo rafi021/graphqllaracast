@@ -1,5 +1,20 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
+import { useRouter, RouterLink, RouterView } from 'vue-router'
+import { useQuery } from '@vue/apollo-composable';
+import { USERNAME } from '../graphql/auth';
+import { ref } from 'vue';
+import { useAuthStore } from '@/stores/auth';
+
+const router = useRouter();
+const authStore = useAuthStore();
+const { result, onResult } = useQuery(USERNAME);
+
+onResult((queryResult) => {
+    console.log(queryResult.data);
+    authStore.setUserName(queryResult.data.me.name)
+})
+
+
 </script>
 <template>
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
@@ -18,7 +33,7 @@ import { RouterLink, RouterView } from 'vue-router'
             </li>
             <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Admin
+                {{ authStore.getUserName }}
             </a>
             <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="#">Profile</a></li>

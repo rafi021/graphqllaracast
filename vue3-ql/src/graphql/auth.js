@@ -1,13 +1,13 @@
 import gql from 'graphql-tag';
 
-// export const USERNAME = gql`
-// query me(){
-//     me(){
-//         name
-//         email
-//     }
-// }
-// `
+export const USERNAME = gql`
+query me{
+    me{
+        name
+        email
+    }
+}
+`
 
 export const LOGIN = gql`
 mutation login (

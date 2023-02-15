@@ -10,6 +10,9 @@ export const useAuthStore = defineStore('auth', {
     getters: {
         getToken(state){
             return state.token;
+        },
+        getUserName(state){
+            return state.username;
         }
     },
     actions: {
@@ -24,7 +27,7 @@ export const useAuthStore = defineStore('auth', {
             localStorage.removeItem('username');
         },
         setUserName(name){
-            this.username = this.decodedToken.user.name;
+            this.username = name;
             localStorage.setItem('username', this.username);
         }
     }
