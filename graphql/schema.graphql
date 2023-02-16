@@ -15,28 +15,10 @@ type Query {
 }
 
 type Mutation{
-    createPost(
-        user_id: ID!
-        title: String! @rules(apply: ["required", "min:3"])
-        body: String! @rules(apply: ["required", "min:3"])
-    ): Post @create
-
-    createPostResolver(
-        user_id: ID!
-        title: String! @rules(apply: ["required", "min:3"])
-        body: String! @rules(apply: ["required", "min:3"])
-    ): Post @field (resolver: "App\\GraphQL\\Mutations\\CreatePostResolver")
-
-    updatePost(
-        id: ID!
-        user_id: ID
-        title: String! @rules(apply: ["required", "min:3"])
-        body: String! @rules(apply: ["required", "min:3"])
-    ): Post @update
-
-    deletePost(
-        id: ID!
-    ): Post @delete
+    createPost(input: CreatePostInput @spread): Post @create @guard @inject(context: "user.id", name: "user_id")
+    createPostResolver(user_id: ID!, input: CreatePostInput @ spread): Post @field (resolver: "App\\GraphQL\\Mutations\\CreatePostResolver")
+    updatePost(id: ID!, input: UpdatePostInput @spread): Post @update @guard @can(ability: "update", find: "id")
+    deletePost(id: ID!): Post @delete
 
     loginTest(
         email: String!
@@ -69,4 +51,15 @@ type Post{
     user: User! @belongsTo
     created_at: DateTime!
     updated_at: DateTime!
+}
+
+input CreatePostInput{
+    user_id: ID
+    title: String @rules(apply: ["required", "min:3"])
+    body: String @rules(apply: ["required", "min:3"])
+}
+input UpdatePostInput{
+    user_id: ID
+    title: String @rules(apply: ["required", "min:3"])
+    body: String @rules(apply: ["required", "min:3"])
 }

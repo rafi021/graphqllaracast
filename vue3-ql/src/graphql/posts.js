@@ -23,11 +23,25 @@ query posts($page: Int!){
     }
 }
 `
+export const SHOW_POST = gql`
+query post($id: ID!){
+    post(id: $id){
+        id
+        title
+        body
+        created_at
+        user{
+            id
+            name
+        }
+    }
+}
+`
 export const CREATE_POST = gql`
 mutation createPost (
     $title: String!
     $body: String!
-    $user_id: ID!
+    $user_id: ID
 ) {
     createPost ( input: {
         user_id: $user_id
@@ -66,8 +80,8 @@ mutation updatePost (
     })
     {
         id
-        name
-        email
+        title
+        body
      }
 }
 `
