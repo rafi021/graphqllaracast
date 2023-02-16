@@ -7,7 +7,7 @@ type Query {
       id: ID @eq @rules(apply: ["prohibits:email", "required_without:email"])
       email: String @eq @rules(apply: ["prohibits:id", "required_without:id", "email"])
     ): User @find
-    users(name: String @where(operator: "like")): [User!]! @paginate(defaultCount: 10) @guard
+    users(name: String @where(operator: "like")): [User!]! @paginate(defaultCount: 10) @guard @can(ability: "viewAny")
     posts(title: String @where(operator: "like")): [Post!]! @paginate(defaultCount:20) @orderBy(column: "created_at", direction: DESC) @guard
     postsResolver: [Post!]! @field(resolver: "App\\GraphQL\\Queries\\PostsResolver")
     postResolver(id: ID!): Post @field(resolver: "App\\GraphQL\\Queries\\PostResolver")
@@ -18,7 +18,7 @@ type Mutation{
     createPost(input: CreatePostInput @spread): Post @create @guard @inject(context: "user.id", name: "user_id")
     createPostResolver(user_id: ID!, input: CreatePostInput @ spread): Post @field (resolver: "App\\GraphQL\\Mutations\\CreatePostResolver")
     updatePost(id: ID!, input: UpdatePostInput @spread): Post @update @guard @can(ability: "update", find: "id")
-    deletePost(id: ID!): Post @delete
+    deletePost(id: ID!): Post @delete @can(ability: "update", find: "id")
 
     loginTest(
         email: String!
@@ -37,6 +37,7 @@ type User {
     id: ID!
     name: String!
     email: String!
+    is_admin: Boolean! @method(name: "isAdmin")
     posts: [Post!]! @hasMany
     email_verified_at: DateTime
     created_at: DateTime!
